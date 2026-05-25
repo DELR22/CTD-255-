@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTD 255 · Computational Applications for Interior Design</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F9F6F1;
+  --sidebar-bg: #181815;
+  --sidebar-text: #EDE8DF;
+  --sidebar-muted: #7A7570;
+  --accent: #A8192F;
+  --accent-lt: #C8394F;
+  --text: #181815;
+  --text-2: #6B6560;
+  --border: #E2DDD5;
+  --card: #F1EDE6;
+  --card-hover: #E8E3DA;
+  --sw: 260px;
+  --ff-display: 'DM Serif Display', Georgia, serif;
+  --ff-body: 'DM Sans', system-ui, sans-serif;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--ff-body); background: var(--bg); color: var(--text); display: flex; min-height: 100vh; font-size: 15px; line-height: 1.65; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sw); background: var(--sidebar-bg);
+  position: fixed; top:0; left:0; height:100vh;
+  overflow-y: auto; display: flex; flex-direction: column;
+  z-index: 100; transition: transform .3s ease;
+}
+.sb-head { padding: 32px 24px 24px; border-bottom: 1px solid rgba(255,255,255,.07); }
+.sb-code { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-lt); margin-bottom: 8px; }
+.sb-title { font-family: var(--ff-display); color: var(--sidebar-text); font-size: 17px; line-height: 1.3; margin-bottom: 10px; }
+.sb-meta { font-size: 12px; color: var(--sidebar-muted); line-height: 1.85; }
+.sb-nav { padding: 24px 0; flex: 1; }
+.nav-label { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--sidebar-muted); padding: 0 24px; margin-bottom: 8px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 24px; cursor: pointer;
+  color: rgba(237,232,223,.55); font-size: 13.5px;
+  border-left: 3px solid transparent; text-decoration: none;
+  transition: all .2s;
+}
+.nav-item:hover { color: var(--sidebar-text); background: rgba(255,255,255,.04); }
+.nav-item.active { color: #fff; border-left-color: var(--accent); background: rgba(168,25,47,.13); font-weight: 500; }
+.nav-num { font-size: 10px; color: var(--sidebar-muted); min-width: 16px; }
+.nav-item.active .nav-num { color: var(--accent-lt); }
+.sb-foot { padding: 20px 24px; border-top: 1px solid rgba(255,255,255,.07); }
+.sb-instructor { font-size: 11px; color: var(--sidebar-muted); line-height: 1.7; }
+.sb-instructor strong { color: rgba(237,232,223,.8); display:block; font-weight: 500; }
+
+/* ── MAIN ── */
+.main { margin-left: var(--sw); flex:1; max-width: 860px; padding: 0 56px 80px; }
+
+/* ── HERO ── */
+.hero {
+  background: var(--sidebar-bg); color: var(--sidebar-text);
+  padding: 60px 56px 48px; margin: 0 -56px 72px;
+  position: relative; overflow: hidden;
+}
+.hero::after {
+  content: '255'; position: absolute; right: -10px; bottom: -40px;
+  font-family: var(--ff-display); font-size: 200px; line-height: 1;
+  color: rgba(255,255,255,.025); pointer-events: none;
+}
+.hero-code { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-lt); margin-bottom: 14px; }
+.hero-title { font-family: var(--ff-display); font-size: 44px; line-height: 1.1; color: #fff; margin-bottom: 22px; max-width: 560px; }
+.hero-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+.chip { font-size: 11px; padding: 4px 12px; border: 1px solid rgba(255,255,255,.16); color: rgba(237,232,223,.65); border-radius: 100px; }
+.hero-lead { font-size: 14px; color: rgba(237,232,223,.65); max-width: 580px; line-height: 1.75; }
+
+/* ── SECTION ── */
+section { margin-bottom: 80px; scroll-margin-top: 40px; }
+.sec-label { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.sec-title { font-family: var(--ff-display); font-size: 36px; line-height: 1.1; margin-bottom: 28px; }
+.sec-title em { font-style: italic; color: var(--text-2); }
+.rule { width: 36px; height: 2px; background: var(--accent); margin: 20px 0; }
+.lead { font-size: 15px; line-height: 1.75; color: var(--text); margin-bottom: 20px; }
+
+/* ── INFO GRID ── */
+.info-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 36px; }
+.info-cell { background: var(--bg); padding: 18px 22px; }
+.info-lbl { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--text-2); margin-bottom: 4px; }
+.info-val { font-size: 14px; color: var(--text); font-weight: 500; }
+.info-val a { color: var(--accent); text-decoration: none; }
+
+/* ── SOFTWARE CHIPS ── */
+.sw-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 24px; }
+.sw-chip { font-size: 12px; padding: 5px 14px; background: var(--card); border: 1px solid var(--border); color: var(--text-2); border-radius: 100px; }
+
+/* ── SLO ACCORDION ── */
+.slo-list { display: flex; flex-direction: column; gap: 2px; }
+.slo-item { background: var(--card); cursor: pointer; transition: background .2s; }
+.slo-item:hover { background: var(--card-hover); }
+.slo-item.open { background: var(--card-hover); }
+.slo-head { display: flex; align-items: flex-start; gap: 16px; padding: 22px 26px; }
+.slo-num { font-family: var(--ff-display); font-size: 30px; color: var(--border); line-height: 1; flex-shrink: 0; min-width: 26px; transition: color .2s; }
+.slo-item.open .slo-num { color: var(--accent); }
+.slo-name { font-weight: 600; font-size: 14px; line-height: 1.4; padding-top: 4px; flex:1; }
+.slo-chevron { color: var(--text-2); transition: transform .25s; flex-shrink: 0; margin-top: 5px; }
+.slo-item.open .slo-chevron { transform: rotate(180deg); }
+.slo-body { display: none; padding: 4px 26px 22px 68px; font-size: 13.5px; color: var(--text-2); line-height: 1.7; }
+.slo-item.open .slo-body { display: block; }
+.std-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.std-tag { font-size: 10px; font-weight: 600; padding: 3px 10px; background: var(--bg); border: 1px solid var(--border); color: var(--text-2); border-radius: 100px; letter-spacing: .04em; }
+
+/* ── GRADE BAR ── */
+.grade-bar { display: flex; height: 8px; gap: 2px; border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+.gb { height: 100%; }
+.gb-1 { background: #A8192F; width: 15%; }
+.gb-2 { background: #BF3045; width: 15%; }
+.gb-3 { background: #CC5065; width: 45%; }
+.gb-4 { background: #D97A88; width: 25%; }
+.grade-legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 28px; }
+.gl-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-2); }
+.gl-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.gl-item strong { color: var(--text); font-weight: 600; }
+
+/* ── STAGE CARDS ── */
+.stage-list { display: flex; flex-direction: column; gap: 20px; }
+.stage-card { border: 1px solid var(--border); overflow: hidden; }
+.stage-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 22px; background: var(--card);
+  cursor: pointer; transition: background .2s;
+}
+.stage-head:hover { background: var(--card-hover); }
+.stage-badge { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; background: var(--accent); color: #fff; border-radius: 2px; white-space: nowrap; }
+.stage-name { font-weight: 600; font-size: 15px; flex:1; }
+.stage-dates { font-size: 12px; color: var(--text-2); white-space: nowrap; }
+.stage-pts-wrap { text-align: right; }
+.stage-pts { font-family: var(--ff-display); font-size: 22px; line-height: 1; }
+.stage-pts-lbl { font-size: 10px; color: var(--text-2); }
+.stage-chevron { color: var(--text-2); transition: transform .25s; flex-shrink: 0; }
+.stage-card.open .stage-chevron { transform: rotate(180deg); }
+.stage-body { display: none; border-top: 1px solid var(--border); }
+.stage-card.open .stage-body { display: block; }
+.asgn-row { display: flex; align-items: flex-start; gap: 18px; padding: 18px 22px; border-bottom: 1px solid var(--border); }
+.asgn-row:last-child { border-bottom: none; }
+.asgn-id { font-size: 11px; font-weight: 600; color: var(--text-2); min-width: 22px; padding-top: 2px; }
+.asgn-body { flex: 1; }
+.asgn-title { font-weight: 600; font-size: 14px; margin-bottom: 5px; }
+.asgn-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+.asgn-pts { text-align: right; }
+.asgn-pts-val { font-family: var(--ff-display); font-size: 20px; line-height: 1; }
+.asgn-pts-lbl { font-size: 10px; color: var(--text-2); }
+
+/* ── EVAL GRID ── */
+.eval-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+.eval-cell { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+.eval-cell strong { color: var(--text); display: block; margin-bottom: 2px; }
+.callout { margin-top: 28px; padding: 22px 26px; background: var(--card); border-left: 3px solid var(--accent); }
+.callout-title { font-weight: 600; font-size: 14px; margin-bottom: 12px; }
+
+/* ── SCHEDULE ── */
+.week-block { margin-bottom: 36px; }
+.week-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.week-pill { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 5px 14px; border: 1px solid var(--accent); color: var(--accent); border-radius: 2px; white-space: nowrap; }
+.week-name { font-weight: 600; font-size: 15px; }
+.week-pts { font-size: 12px; color: var(--text-2); margin-left: auto; }
+.sch-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.sch-table tr { border-bottom: 1px solid var(--border); }
+.sch-table tr:last-child { border-bottom: none; }
+.sch-table td { padding: 12px 16px; vertical-align: top; }
+.sch-table td.date { width: 130px; color: var(--text-2); font-size: 12px; white-space: nowrap; padding-top: 14px; }
+.sch-table tr.is-sync td.date { color: var(--accent); font-weight: 600; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; padding: 2px 9px; border-radius: 100px; margin-bottom: 4px; }
+.tag-sync { background: rgba(168,25,47,.1); color: var(--accent); }
+.tag-due { background: rgba(24,24,21,.08); color: var(--text); }
+.tag-rec { font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--text-2); }
+
+/* ── POLICY LIST ── */
+.policy-group { margin-bottom: 48px; }
+.policy-group-title { font-family: var(--ff-display); font-size: 22px; margin-bottom: 6px; }
+.policy-list { display: flex; flex-direction: column; gap: 2px; }
+.policy-item { display: flex; gap: 18px; padding: 16px 22px; background: var(--card); font-size: 14px; line-height: 1.65; align-items: flex-start; }
+.policy-n { font-family: var(--ff-display); font-size: 26px; color: var(--border); line-height: 1; flex-shrink: 0; min-width: 22px; }
+.policy-item strong { color: var(--text); }
+
+/* ── HAMBURGER ── */
+.hamburger { display: none; position: fixed; top:14px; left:14px; z-index:200; background: var(--sidebar-bg); border: none; color: var(--sidebar-text); padding: 10px; cursor: pointer; border-radius: 4px; }
+.overlay { display:none; position:fixed; inset:0; background: rgba(0,0,0,.5); z-index:99; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 0 22px 60px; }
+  .hero { padding: 64px 22px 40px; margin: 0 -22px 56px; }
+  .hero-title { font-size: 30px; }
+  .sec-title { font-size: 28px; }
+  .hamburger { display: block; }
+  .overlay.open { display: block; }
+  .info-grid { grid-template-columns: 1fr; }
+  .eval-grid { grid-template-columns: 1fr; }
+  .grade-legend { gap: 12px; }
+  .stage-head { flex-wrap: wrap; gap: 10px; }
+  .stage-dates { display: none; }
+}
+</style>
+</head>
+<body>
+
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+  <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M0 1h18M0 7h18M0 13h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sb-head">
+    <div class="sb-code">CTD 255-001 · Summer 2026</div>
+    <div class="sb-title">Computational Applications<br>for Interior Design</div>
+    <div class="sb-meta">3 Credit Hours · Virtual<br>Combined Lecture / Lab</div>
+  </div>
+  <div class="sb-nav">
+    <div class="nav-label">Contents</div>
+    <a href="#overview" class="nav-item active"><span class="nav-num">01</span>Course Overview</a>
+    <a href="#time-commitment" class="nav-item"><span class="nav-num">02</span>Time Commitment</a>
+    <a href="#outcomes" class="nav-item"><span class="nav-num">03</span>Learning Outcomes</a>
+    <a href="#grading" class="nav-item"><span class="nav-num">04</span>Assignments & Grading</a>
+    <a href="#schedule" class="nav-item"><span class="nav-num">05</span>Course Schedule</a>
+    <a href="#policies" class="nav-item"><span class="nav-num">06</span>Policies</a>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-instructor">
+      <strong>Daniel Ronderos</strong>
+      deronderos@ua.edu<br>
+      Office hours by appointment
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero" id="overview">
+    <div class="hero-code">CTD 255-001 · The University of Alabama · Summer 2026</div>
+    <div class="hero-title">Computational Applications<br>for Interior Design</div>
+    <div class="hero-chips">
+      <span class="chip">3 Credit Hours</span>
+      <span class="chip">Virtual / Asynchronous</span>
+      <span class="chip">Combined Lecture + Lab</span>
+      <span class="chip">May 26 – June 24</span>
+    </div>
+    <div class="hero-lead">An elective course guiding students through the integrated digital workflow of contemporary interior design practice — from AI-assisted concept generation to final presentation graphics.</div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section>
+    <div class="sec-label">About This Course</div>
+    <div class="sec-title">Course <em>Description</em></div>
+
+    <div class="info-grid">
+      <div class="info-cell"><div class="info-lbl">Instructor</div><div class="info-val">Daniel Ronderos</div></div>
+      <div class="info-cell"><div class="info-lbl">Email</div><div class="info-val"><a href="mailto:deronderos@ua.edu">deronderos@ua.edu</a></div></div>
+      <div class="info-cell"><div class="info-lbl">Office Hours</div><div class="info-val">By appointment</div></div>
+      <div class="info-cell"><div class="info-lbl">Course Dates</div><div class="info-val">May 26 – June 24, 2026</div></div>
+      <div class="info-cell"><div class="info-lbl">Format</div><div class="info-val">Virtual · Async + Sync Sessions</div></div>
+      <div class="info-cell"><div class="info-lbl">Core Attributes</div><div class="info-val">Computer Science · Experiential Learning</div></div>
+      <div class="info-cell"><div class="info-lbl">Credit Hours</div><div class="info-val">3 Credit Hours</div></div>
+      <div class="info-cell"><div class="info-lbl">Interior Design Major</div><div class="info-val">Counts toward 6 credits of approved Studio Art / professional electives</div></div>
+    </div>
+
+    <p class="lead">This elective course guides students through the integrated digital workflow of contemporary interior design practice, using a design-process framework. Students follow instructor-produced video tutorials to complete an interior design case study, tracing the design process from AI-assisted concept generation through spatial planning, technical documentation, and final presentation.</p>
+    <p class="lead">AutoCAD is introduced as a tool for schematic block planning and area calculation, while Autodesk Revit serves as the primary environment for all interior modeling and technical documentation. Twinmotion is used to develop real-time 3D visualizations directly linked to the Revit model, and Adobe Photoshop, combined with AI image-refining tools, is used for post-production rendering and designing final presentation graphics and layouts.</p>
+
+    <div class="sec-label" style="margin-top:28px;margin-bottom:10px;">Software Covered</div>
+    <div class="sw-chips">
+      <span class="sw-chip">AutoCAD</span>
+      <span class="sw-chip">Autodesk Revit</span>
+      <span class="sw-chip">Twinmotion</span>
+      <span class="sw-chip">Adobe Photoshop</span>
+      <span class="sw-chip">AI Concept Generation</span>
+      <span class="sw-chip">AI Image Refinement</span>
+    </div>
+  </section>
+
+  <!-- TIME COMMITMENT -->
+  <section id="time-commitment">
+    <div class="sec-label">Weekly Time Expectations</div>
+    <div class="sec-title">Time Commitment <em>Breakdown</em></div>
+    <p class="lead">When calculating how much time students should dedicate, it is best to look at both the formal scheduled hours and the standard university workload guidelines.</p>
+    <div class="info-grid" style="margin-bottom:0;">
+      <div class="info-cell" style="padding:24px 26px;">
+        <div class="info-lbl" style="margin-bottom:10px;">In-Class Studio Time</div>
+        <div style="font-size:14px;color:var(--text);line-height:1.7;">Because it is a studio-based digital applications course, it typically meets for <strong>3 to 4 contact hours per week.</strong></div>
+      </div>
+      <div class="info-cell" style="padding:24px 26px;">
+        <div class="info-lbl" style="margin-bottom:10px;">Outside-of-Class Work</div>
+        <div style="font-size:14px;color:var(--text);line-height:1.7;">The standard dictates that for every 1 credit hour, students should spend roughly 2 hours on outside coursework. For this class, this translates to <strong>6 hours of independent work per week.</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEARNING OUTCOMES -->
+  <section id="outcomes">
+    <div class="sec-label">What You Will Learn</div>
+    <div class="sec-title">Student Learning <em>Outcomes</em></div>
+    <p style="font-size:14px;color:var(--text-2);margin-bottom:24px;line-height:1.7;">Click each outcome to expand its full description and accreditation standards alignment.</p>
+
+    <div class="slo-list">
+      <div class="slo-item" onclick="toggleSLO(this)">
+        <div class="slo-head">
+          <div class="slo-num">1</div>
+          <div class="slo-name">BIM-Based Technical Documentation</div>
+          <svg class="slo-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="slo-body">
+          Students will demonstrate technical proficiency in Autodesk Revit by producing a complete and accurately dimensioned set of interior construction documents, including floor plans, reflected ceiling plans, elevations, and section cuts.
+          <div class="std-tags">
+            <span class="std-tag">CIDA 9e</span><span class="std-tag">CIDA 15h</span><span class="std-tag">CIDA 15j</span><span class="std-tag">NASAD Item 3f</span><span class="std-tag">NASAD Item 1a</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slo-item" onclick="toggleSLO(this)">
+        <div class="slo-head">
+          <div class="slo-num">2</div>
+          <div class="slo-name">Rendering and Spatial Visualization</div>
+          <svg class="slo-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="slo-body">
+          Students will employ various rendering engines, methods, and tools to generate 3D images that intentionally communicate materiality, light quality, and spatial atmosphere, demonstrating the ability to manipulate key parameters as deliberate design communication decisions.
+          <div class="std-tags">
+            <span class="std-tag">CIDA 9e</span><span class="std-tag">CIDA 9d</span><span class="std-tag">CIDA 12h</span><span class="std-tag">CIDA 9f</span><span class="std-tag">NASAD Item 2</span><span class="std-tag">NASAD Item 3f</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slo-item" onclick="toggleSLO(this)">
+        <div class="slo-head">
+          <div class="slo-num">3</div>
+          <div class="slo-name">Critical Technology Selection and Integration Across the Design Process</div>
+          <svg class="slo-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="slo-body">
+          Students will demonstrate critical judgment in selecting and integrating digital tools at appropriate phases of the design process, articulating the specific communicative purpose, representational advantages, and inherent limitations of each tool relative to the audience, project stage, and design intent.
+          <div class="std-tags">
+            <span class="std-tag">CIDA 8g</span><span class="std-tag">CIDA 8h</span><span class="std-tag">CIDA 9e</span><span class="std-tag">NASAD 4a</span><span class="std-tag">NASAD 4b</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slo-item" onclick="toggleSLO(this)">
+        <div class="slo-head">
+          <div class="slo-num">4</div>
+          <div class="slo-name">Composite Presentation Graphics and Audience-Directed Communication</div>
+          <svg class="slo-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="slo-body">
+          Students will apply digital representation tools and methods to synthesize digital outputs, demonstrating the ability to construct a coherent, persuasive visual narrative that supports a documented design workflow.
+          <div class="std-tags">
+            <span class="std-tag">CIDA 9e</span><span class="std-tag">CIDA 9b</span><span class="std-tag">CIDA 11b</span><span class="std-tag">NASAD Item 3f</span><span class="std-tag">NASAD Item 2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slo-item" onclick="toggleSLO(this)">
+        <div class="slo-head">
+          <div class="slo-num">5</div>
+          <div class="slo-name">Iterative, Technology-Mediated Design Refinement</div>
+          <svg class="slo-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="slo-body">
+          Students will deploy different digital representation tools and methods iteratively as instruments of design inquiry, using outputs from each application to critically evaluate and refine spatial organization, material selections, and lighting strategies across successive design iterations.
+          <div class="std-tags">
+            <span class="std-tag">CIDA 8f</span><span class="std-tag">CIDA 8g</span><span class="std-tag">CIDA 5d</span><span class="std-tag">NASAD Item 1</span><span class="std-tag">NASAD 4a</span><span class="std-tag">NASAD Item 3a</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRADING -->
+  <section id="grading">
+    <div class="sec-label">Assignments & Evaluation</div>
+    <div class="sec-title">Grading <em>Structure</em></div>
+
+    <div class="grade-bar">
+      <div class="gb gb-1"></div>
+      <div class="gb gb-2"></div>
+      <div class="gb gb-3"></div>
+      <div class="gb gb-4"></div>
+    </div>
+    <div class="grade-legend">
+      <div class="gl-item"><div class="gl-dot gb-1"></div>Stage 1 · Design Concept <strong>150 pts</strong></div>
+      <div class="gl-item"><div class="gl-dot gb-2"></div>Stage 2 · Schematic Design <strong>150 pts</strong></div>
+      <div class="gl-item"><div class="gl-dot gb-3"></div>Stage 3 · Construction Docs <strong>450 pts</strong></div>
+      <div class="gl-item"><div class="gl-dot gb-4"></div>Stage 4 · Project Delivery <strong>250 pts</strong></div>
+    </div>
+
+    <p style="font-size:14px;color:var(--text-2);margin-bottom:28px;line-height:1.7;">Assessment rewards methodological understanding, purposeful tool integration, and design coherence — not software proficiency or instruction-following alone. Click each stage to view its assignments.</p>
+
+    <div class="stage-list">
+
+      <!-- Stage 1 -->
+      <div class="stage-card open">
+        <div class="stage-head" onclick="toggleStage(this)">
+          <div class="stage-badge">Stage 1</div>
+          <div class="stage-name">Design Concept</div>
+          <div class="stage-dates">May 26 – 30</div>
+          <div class="stage-pts-wrap"><div class="stage-pts">150</div><div class="stage-pts-lbl">points</div></div>
+          <svg class="stage-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="stage-body">
+          <div class="asgn-row">
+            <div class="asgn-id">#1</div>
+            <div class="asgn-body">
+              <div class="asgn-title">AI-Assisted Concept Generation and Design Narrative</div>
+              <div class="asgn-desc">Using Human-Centered Design principles as a framework, generate and curate AI imagery to establish a clear concept direction, culminating in a written design narrative that defines the intended spatial atmosphere, material palette, and user experience.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">100</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+          <div class="asgn-row">
+            <div class="asgn-id">PB</div>
+            <div class="asgn-body">
+              <div class="asgn-title">Process Board — Check-in 1</div>
+              <div class="asgn-desc">Miro board entries documenting concept development decisions and Stage 1 milestones.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">50</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="stage-card">
+        <div class="stage-head" onclick="toggleStage(this)">
+          <div class="stage-badge">Stage 2</div>
+          <div class="stage-name">Schematic Design</div>
+          <div class="stage-dates">June 2 – 6</div>
+          <div class="stage-pts-wrap"><div class="stage-pts">150</div><div class="stage-pts-lbl">points</div></div>
+          <svg class="stage-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="stage-body">
+          <div class="asgn-row">
+            <div class="asgn-id">#2</div>
+            <div class="asgn-body">
+              <div class="asgn-title">AutoCAD Schematic Block Plan and Area Analysis</div>
+              <div class="asgn-desc">Draw a schematic block plan of the case study project in AutoCAD, organizing spatial zones, circulation, and program components, and calculating the area of each space in accordance with the provided design brief.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">100</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+          <div class="asgn-row">
+            <div class="asgn-id">PB</div>
+            <div class="asgn-body">
+              <div class="asgn-title">Process Board — Check-in 2</div>
+              <div class="asgn-desc">Miro board entries documenting spatial decisions, zone iterations, and Stage 2 milestones.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">50</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="stage-card">
+        <div class="stage-head" onclick="toggleStage(this)">
+          <div class="stage-badge">Stage 3</div>
+          <div class="stage-name">Construction Documents</div>
+          <div class="stage-dates">June 9 – 19</div>
+          <div class="stage-pts-wrap"><div class="stage-pts">450</div><div class="stage-pts-lbl">points</div></div>
+          <svg class="stage-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="stage-body">
+          <div class="asgn-row">
+            <div class="asgn-id">#3</div>
+            <div class="asgn-body">
+              <div class="asgn-title">Revit Interior Model <span style="font-size:11px;color:var(--text-2);font-weight:400;">· Due June 13</span></div>
+              <div class="asgn-desc">Build a complete interior model of the case study in Revit, including walls, floors, ceilings, openings, and key interior elements, demonstrating accuracy, organizational discipline, and correct use of BIM conventions.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">200</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+          <div class="asgn-row">
+            <div class="asgn-id">#4</div>
+            <div class="asgn-body">
+              <div class="asgn-title">Revit Technical Documentation Set <span style="font-size:11px;color:var(--text-2);font-weight:400;">· Due June 19</span></div>
+              <div class="asgn-desc">Produce a coordinated set of interior construction documents — including dimensioned floor plans, interior elevations, at least one building section, and a reflected ceiling plan — organized and annotated to professional standards.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">200</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+          <div class="asgn-row">
+            <div class="asgn-id">PB</div>
+            <div class="asgn-body">
+              <div class="asgn-title">Process Board — Check-in 3 <span style="font-size:11px;color:var(--text-2);font-weight:400;">· Due June 19</span></div>
+              <div class="asgn-desc">Miro board entries documenting modeling decisions, technical iterations, and Stage 3 milestones.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">50</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 4 -->
+      <div class="stage-card">
+        <div class="stage-head" onclick="toggleStage(this)">
+          <div class="stage-badge">Stage 4</div>
+          <div class="stage-name">Project Delivery</div>
+          <div class="stage-dates">June 20 – 24</div>
+          <div class="stage-pts-wrap"><div class="stage-pts">250</div><div class="stage-pts-lbl">points</div></div>
+          <svg class="stage-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="stage-body">
+          <div class="asgn-row">
+            <div class="asgn-id">#5</div>
+            <div class="asgn-body">
+              <div class="asgn-title">Twinmotion Visualization Package</div>
+              <div class="asgn-desc">Configure materials, lighting, and atmosphere settings in Twinmotion and capture a minimum set of still renders and a short walkthrough sequence, demonstrating purposeful camera placement and rendering decisions aligned with the design concept.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">100</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+          <div class="asgn-row">
+            <div class="asgn-id">#6</div>
+            <div class="asgn-body">
+              <div class="asgn-title">Case Study Presentation Board</div>
+              <div class="asgn-desc">Using Photoshop and AI image-refining tools, post-produce Twinmotion renders and assemble a professionally formatted presentation board integrating concept imagery, technical documentation, and final visualizations into a cohesive visual narrative.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">100</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+          <div class="asgn-row">
+            <div class="asgn-id">PB</div>
+            <div class="asgn-body">
+              <div class="asgn-title">Process Board — Final Assessment</div>
+              <div class="asgn-desc">Complete Miro board evaluated across all four stages for depth, specificity, and analytical quality of design process documentation.</div>
+            </div>
+            <div class="asgn-pts"><div class="asgn-pts-val">50</div><div class="asgn-pts-lbl">points</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /stage-list -->
+
+    <div class="callout">
+      <div class="callout-title">Evaluation Dimensions</div>
+      <div class="eval-grid">
+        <div class="eval-cell"><strong>Conceptual Alignment</strong>Does the deliverable reflect and advance the design concept?</div>
+        <div class="eval-cell"><strong>Methodological Integrity</strong>Does the work show understanding of why each step matters?</div>
+        <div class="eval-cell"><strong>Technical Accuracy</strong>Is the output complete, precise, and professionally standard?</div>
+        <div class="eval-cell"><strong>Design Communication</strong>Are ideas conveyed clearly for the intended audience?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <section id="schedule">
+    <div class="sec-label">May 26 – June 24, 2026</div>
+    <div class="sec-title">Course <em>Schedule</em></div>
+    <p style="font-size:14px;color:var(--text-2);margin-bottom:32px;line-height:1.7;">Synchronous sessions meet every <strong>Tuesday and Thursday</strong>. Recommended advancement markers indicate where you should be to stay on track for upcoming deadlines.</p>
+
+    <!-- Week 1 -->
+    <div class="week-block">
+      <div class="week-head">
+        <div class="week-pill">Week 1</div>
+        <div class="week-name">Stage 1 — Design Concept</div>
+        <div class="week-pts">150 pts</div>
+      </div>
+      <table class="sch-table">
+        <tr class="is-sync"><td class="date">Tue, May 26</td><td><span class="tag tag-sync">Sync 1</span><br>Course begins. Review syllabus, grading policy, and case study project brief. Course orientation. Introduction to the case study project: program, typology, and design brief. Begin AI-assisted concept generation.</td></tr>
+        <tr><td class="date">Wed, May 27</td><td><span class="tag-rec">Recommended —</span> AI imagery curated and design narrative in draft form.</td></tr>
+        <tr class="is-sync"><td class="date">Thu, May 28</td><td><span class="tag tag-sync">Sync 2</span><br>Concept direction review. Feedback on AI image curation and design narrative.</td></tr>
+        <tr><td class="date">Sat, May 30</td><td><span class="tag tag-due">Due</span><br>Assignment 1: AI-Assisted Concept Generation and Design Narrative &nbsp;·&nbsp; Process Board Check-in 1</td></tr>
+      </table>
+    </div>
+
+    <!-- Week 2 -->
+    <div class="week-block">
+      <div class="week-head">
+        <div class="week-pill">Week 2</div>
+        <div class="week-name">Stage 2 — Schematic Design</div>
+        <div class="week-pts">150 pts</div>
+      </div>
+      <table class="sch-table">
+        <tr class="is-sync"><td class="date">Tue, June 2</td><td><span class="tag tag-sync">Sync 3</span><br>Begin schematic block plan in AutoCAD. Schematic layout review. Feedback on spatial organization, zone relationships, and alignment with the design concept.</td></tr>
+        <tr><td class="date">Wed, June 3</td><td><span class="tag-rec">Recommended —</span> Block plan layout resolved. Area calculations underway.</td></tr>
+        <tr class="is-sync"><td class="date">Thu, June 4</td><td><span class="tag tag-sync">Sync 4</span><br>Block plan and area analysis review. Final feedback before submission.</td></tr>
+        <tr><td class="date">Sat, June 6</td><td><span class="tag tag-due">Due</span><br>Assignment 2: AutoCAD Schematic Block Plan and Area Analysis &nbsp;·&nbsp; Process Board Check-in 2</td></tr>
+      </table>
+    </div>
+
+    <!-- Week 3 -->
+    <div class="week-block">
+      <div class="week-head">
+        <div class="week-pill">Week 3</div>
+        <div class="week-name">Stage 3a — Revit Interior Model</div>
+        <div class="week-pts">200 pts</div>
+      </div>
+      <table class="sch-table">
+        <tr class="is-sync"><td class="date">Tue, June 9</td><td><span class="tag tag-sync">Sync 5</span><br>Begin Revit interior model. Set up project file, establish BIM conventions, and begin modeling walls, floors, and openings. Revit model progress review. Feedback on model structure, BIM organization, and spatial accuracy.</td></tr>
+        <tr><td class="date">Wed, June 10</td><td><span class="tag-rec">Recommended —</span> Primary spatial elements modeled — walls, floors, openings, and ceiling volumes.</td></tr>
+        <tr class="is-sync"><td class="date">Thu, June 11</td><td><span class="tag tag-sync">Sync 6</span><br>Full model review. Feedback on completeness, element coordination, and consistency with schematic design decisions.</td></tr>
+        <tr><td class="date">Sat, June 13</td><td><span class="tag tag-due">Due</span><br>Assignment 3: Revit Interior Model</td></tr>
+      </table>
+    </div>
+
+    <!-- Week 4 -->
+    <div class="week-block">
+      <div class="week-head">
+        <div class="week-pill">Week 4</div>
+        <div class="week-name">Stage 3b — Technical Documentation</div>
+        <div class="week-pts">250 pts</div>
+      </div>
+      <table class="sch-table">
+        <tr class="is-sync"><td class="date">Tue, June 16</td><td><span class="tag tag-sync">Sync 7</span><br>Begin documentation set. Generate and organize floor plans, interior elevations, and building sections from the Revit model. Documentation set progress review. Feedback on drawing coordination, dimensioning, and annotation standards.</td></tr>
+        <tr><td class="date">Wed, June 17</td><td><span class="tag-rec">Recommended —</span> Floor plans, elevations, and sections complete. Reflected ceiling plan and sheet organization underway. Begin Twinmotion material and lighting configuration.</td></tr>
+        <tr class="is-sync"><td class="date">Thu, June 18</td><td><span class="tag tag-sync">Sync 8</span><br>Final documentation review and Process Board Check-in discussion.</td></tr>
+        <tr><td class="date">Fri, June 19</td><td><span class="tag tag-due">Due</span><br>Assignment 4: Revit Technical Documentation Set &nbsp;·&nbsp; Process Board Check-in 3</td></tr>
+      </table>
+    </div>
+
+    <!-- Week 5 -->
+    <div class="week-block">
+      <div class="week-head">
+        <div class="week-pill">Week 5</div>
+        <div class="week-name">Stage 4 — Project Delivery</div>
+        <div class="week-pts">250 pts</div>
+      </div>
+      <table class="sch-table">
+        <tr><td class="date">Sat, June 20</td><td>Finalize Twinmotion material, lighting, and atmosphere settings. Capture still renders and walkthrough sequence.</td></tr>
+        <tr><td class="date">Tue, June 23</td><td><span class="tag-rec">Recommended —</span> Twinmotion package complete. Begin Photoshop post-production and presentation board assembly.</td></tr>
+        <tr class="is-sync"><td class="date">Wed, June 24</td><td><span class="tag tag-sync">Sync 9 — Final Presentations</span><br>Students present their complete case study to the instructor and peers.<br><br><span class="tag tag-due">Due</span><br>Assignment 5: Twinmotion Visualization Package &nbsp;·&nbsp; Assignment 6: Case Study Presentation Board &nbsp;·&nbsp; Process Board Final Assessment</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- POLICIES -->
+  <section id="policies">
+    <div class="sec-label">Academic Policies</div>
+    <div class="sec-title">Course <em>Policies</em></div>
+
+    <div class="policy-group">
+      <div class="policy-group-title">Missed Coursework & Resubmissions</div>
+      <div class="rule"></div>
+      <div class="policy-list">
+        <div class="policy-item"><div class="policy-n">1</div><div><strong>All assignments have published deadlines</strong> that align with the four design process stages. Deadlines exist because each stage builds on the previous one — missing them affects your ability to complete subsequent work.</div></div>
+        <div class="policy-item"><div class="policy-n">2</div><div><strong>Late work is accepted up to seven days past the deadline</strong> with a deduction of ten points per day. Work submitted more than seven days late receives a zero and cannot be resubmitted.</div></div>
+        <div class="policy-item"><div class="policy-n">3</div><div><strong>If you need an extension,</strong> contact the instructor in writing before the deadline — or within 48 hours if an emergency prevents this. Extensions are not guaranteed but will be considered for documented illness, family emergencies, or serious extenuating circumstances.</div></div>
+        <div class="policy-item"><div class="policy-n">4</div><div><strong>Incomplete submissions receive partial credit only</strong> for the components that are present. They are not eligible for resubmission. Submitting incomplete work to hold a deadline slot does not protect your resubmission rights — only complete submissions do.</div></div>
+        <div class="policy-item"><div class="policy-n">5</div><div><strong>Complete, on-time submissions are eligible for resubmission.</strong> This course treats revision as a normal and expected part of the design process, not as a second chance reserved for special cases.</div></div>
+        <div class="policy-item"><div class="policy-n">6</div><div><strong>You have ten days from the date graded feedback is returned</strong> to submit a revised version. Resubmissions after this window will not be reviewed.</div></div>
+        <div class="policy-item"><div class="policy-n">7</div><div><strong>Every resubmission requires a Revision Statement</strong> — a short written explanation identifying the feedback you received, the changes you made, and why you made them. Resubmissions without a Revision Statement will not be reviewed. Revisions that only make superficial corrections without engaging the feedback will not improve your grade.</div></div>
+        <div class="policy-item"><div class="policy-n">8</div><div><strong>Resubmissions can improve your grade by a maximum of 15%</strong> of the assignment's total point value. For example, a 150/200 on the Revit Model can improve to a maximum of 180/200 upon resubmission. Each assignment may only be resubmitted once.</div></div>
+        <div class="policy-item"><div class="policy-n">9</div><div><strong>The Collaborative Process Board is not subject to standard resubmission rules.</strong> Low scores on an early check-in can be offset by demonstrated improvement in later entries — the final assessment considers your growth across all four stages.</div></div>
+        <div class="policy-item"><div class="policy-n">10</div><div><strong>If you fall behind, communicate early.</strong> Students who disengage without contact and seek resolution at the end of the term will have limited options.</div></div>
+      </div>
+    </div>
+
+    <div class="policy-group">
+      <div class="policy-group-title">Attendance</div>
+      <div class="rule"></div>
+      <div class="policy-list">
+        <div class="policy-item"><div class="policy-n">1</div><div><strong>This is a virtual, primarily asynchronous course.</strong> Most of your work happens independently through instructor-produced video tutorials that you complete at your own pace. Tutorial content is available starting the first day of class — students are expected to begin the tutorials immediately and progress steadily through each stage. You are expected to manage your time responsibly and advance through the material without waiting to be prompted.</div></div>
+        <div class="policy-item"><div class="policy-n">2</div><div><strong>The course meets twice a week via video call</strong> at times agreed upon with the group at the start of the term. These sessions are dedicated to reviewing project development, providing feedback, and offering design guidance — they are not lectures.</div></div>
+        <div class="policy-item"><div class="policy-n">3</div><div><strong>Attendance at synchronous sessions is not mandatory.</strong> This course is designed for autonomous learners who can self-direct their process. You will not be penalized for missing a session.</div></div>
+        <div class="policy-item"><div class="policy-n">4</div><div><strong>Missing sessions means missing feedback.</strong> Synchronous meetings are the primary opportunity to receive direct, real-time input on your work before the next submission deadline.</div></div>
+        <div class="policy-item"><div class="policy-n">5</div><div><strong>To participate in a session, you must have work to show.</strong> Sessions are project reviews, not open office hours. Students who join without progress to discuss will be asked to return when they have work ready.</div></div>
+        <div class="policy-item"><div class="policy-n">6</div><div><strong>If you cannot attend a scheduled session,</strong> no notification is required. However, if you are at a critical project stage and need feedback before a deadline, contact the instructor in advance to arrange an alternative.</div></div>
+        <div class="policy-item"><div class="policy-n">7</div><div><strong>Repeated absence will not affect your grade directly,</strong> but it will likely affect the quality of your submissions. The feedback offered in these sessions informs the Conceptual Alignment and Methodological Integrity dimensions on which your work is evaluated.</div></div>
+        <div class="policy-item"><div class="policy-n">8</div><div><strong>Video tutorials must be completed in sequence.</strong> The asynchronous content follows the same four-stage design process structure as the assignments. Skipping ahead or working out of order will undermine the coherence of your project.</div></div>
+        <div class="policy-item"><div class="policy-n">9</div><div><strong>The course does not track login activity or time spent on tutorials</strong> as a measure of participation. Your engagement is assessed entirely through the quality and completeness of your submitted work.</div></div>
+        <div class="policy-item"><div class="policy-n">10</div><div><strong>Autonomous behavior is both expected and respected.</strong> You are trusted to manage your schedule, complete the tutorials, attend sessions when they serve your process, and take ownership of your learning.</div></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+  }
+
+  function toggleSLO(el) { el.classList.toggle('open'); }
+
+  function toggleStage(btn) { btn.closest('.stage-card').classList.toggle('open'); }
+
+  // Active nav on scroll
+  const sections = document.querySelectorAll('section[id], .hero[id]');
+  const navLinks = document.querySelectorAll('.nav-item');
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+        if (id === 'overview') navLinks[0].classList.add('active');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '-60px 0px -55% 0px' });
+
+  sections.forEach(s => io.observe(s));
+
+  // Close sidebar on nav click (mobile)
+  navLinks.forEach(a => a.addEventListener('click', () => {
+    if (window.innerWidth <= 768) toggleSidebar();
+  }));
+</script>
+</body>
+</html>
