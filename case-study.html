@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTD 255 · Industrial Retrofit Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --crimson:       #9E1B32;
+      --crimson-dark:  #7A1424;
+      --crimson-mid:   #B8273E;
+      --crimson-pale:  #F7EAED;
+      --white:         #FFFFFF;
+      --off-white:     #FAFAF8;
+      --warm-gray:     #F0ECE8;
+      --rule:          #DDD8D2;
+      --mid-gray:      #9A9189;
+      --dark-gray:     #3A3530;
+      --charcoal:      #1A1714;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      color: var(--charcoal);
+      background: var(--off-white);
+      line-height: 1.65;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--charcoal);
+      border-bottom: 2px solid var(--crimson);
+      height: 52px;
+      padding: 0 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--white);
+    }
+    .nav-brand em { color: var(--crimson-mid); font-style: normal; }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 32px;
+    }
+    nav ul a {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mid-gray);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    nav ul a:hover { color: #fff; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--crimson);
+      padding: 96px 56px 84px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: 'A';
+      position: absolute;
+      right: -60px;
+      top: -100px;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 680px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--crimson-dark);
+      pointer-events: none;
+      user-select: none;
+    }
+    .hero-eyebrow {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: clamp(40px, 5.5vw, 68px);
+      font-weight: 700;
+      line-height: 1.08;
+      color: var(--white);
+      max-width: 680px;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero h1 em { font-style: italic; color: rgba(255,255,255,.8); }
+    .hero-sub {
+      font-size: 16px;
+      color: rgba(255,255,255,.65);
+      max-width: 500px;
+      line-height: 1.7;
+      margin-bottom: 60px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      gap: 0;
+      width: fit-content;
+      position: relative;
+      z-index: 1;
+    }
+    .stat {
+      padding: 0 40px 0 20px;
+      border-left: 2px solid rgba(255,255,255,.2);
+    }
+    .stat:first-child { padding-left: 0; border-left: none; }
+    .stat-num {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat-lbl {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+    }
+
+    /* ── SHARED SECTION CHROME ── */
+    .section { padding: 88px 56px; }
+    .section.alt { background: var(--white); }
+    .section.warm { background: var(--warm-gray); }
+    .section.dark { background: var(--charcoal); }
+
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--crimson);
+      margin-bottom: 12px;
+    }
+    .dark .eyebrow { color: var(--crimson-mid); }
+
+    .sec-title {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: clamp(28px, 3.8vw, 46px);
+      font-weight: 700;
+      line-height: 1.12;
+      color: var(--charcoal);
+      margin-bottom: 32px;
+    }
+    .dark .sec-title { color: var(--white); }
+
+    .sec-rule {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin-bottom: 48px;
+    }
+    .dark .sec-rule { border-color: rgba(255,255,255,.08); }
+
+    /* ── CHALLENGE ── */
+    .challenge-cols {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 64px;
+      align-items: start;
+    }
+    .challenge-body p {
+      font-size: 16px;
+      color: var(--dark-gray);
+      line-height: 1.8;
+      margin-bottom: 18px;
+    }
+    .challenge-body p:last-child { margin-bottom: 0; }
+
+    .specs-panel {
+      background: var(--charcoal);
+      padding: 36px;
+    }
+    .specs-group-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--crimson-mid);
+      margin: 28px 0 14px;
+    }
+    .specs-group-label:first-child { margin-top: 0; }
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-k { font-size: 12px; color: rgba(255,255,255,.45); }
+    .spec-v {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--white);
+      text-align: right;
+    }
+
+    /* ── DIAGRAM ── */
+    .diagram-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .building-svg { width: 100%; height: auto; display: block; }
+
+    /* ── FLOOR SECTION ── */
+    .floor-sec {
+      padding: 88px 56px;
+      position: relative;
+    }
+    .floor-sec.alt { background: var(--white); }
+    .ghost-label {
+      position: absolute;
+      top: 32px;
+      right: 48px;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 220px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--crimson-pale);
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+    .floor-inner { position: relative; z-index: 1; }
+    .floor-head {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 44px;
+    }
+    .floor-pill {
+      background: var(--crimson);
+      color: var(--white);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+    }
+    .floor-title {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--charcoal);
+    }
+    .floor-meta {
+      font-size: 13px;
+      color: var(--mid-gray);
+    }
+
+    /* ── TABLES ── */
+    .tbl-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--crimson);
+      margin-bottom: 10px;
+    }
+    table.prog {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    table.prog thead tr { background: var(--crimson); }
+    table.prog thead th {
+      padding: 11px 16px;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.9);
+      text-align: left;
+    }
+    table.prog thead th.r { text-align: right; }
+    table.prog tbody tr { border-bottom: 1px solid var(--rule); transition: background .15s; }
+    table.prog tbody tr:hover { background: var(--crimson-pale); }
+    table.prog tbody td { padding: 10px 16px; color: var(--dark-gray); }
+    table.prog tbody td.num {
+      text-align: right;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+    table.prog tbody td.smnum { text-align: right; }
+    table.prog tr.sub { background: var(--warm-gray); }
+    table.prog tr.sub td { font-weight: 600; color: var(--charcoal) !important; }
+    table.prog tfoot tr { background: var(--charcoal); }
+    table.prog tfoot td {
+      padding: 12px 16px;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 13px;
+    }
+    table.prog tfoot td.num {
+      text-align: right;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 17px;
+      color: var(--white);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .two-col.wide { grid-template-columns: 1.15fr 1fr; }
+
+    /* ── UNIT CARDS ── */
+    .unit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 52px;
+    }
+    .unit-card {
+      border-top: 3px solid var(--crimson);
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--crimson);
+      background: var(--white);
+      padding: 22px 20px 18px;
+    }
+    .unit-card.dk {
+      background: var(--charcoal);
+      border-color: var(--charcoal);
+    }
+    .unit-type-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--crimson);
+      margin-bottom: 10px;
+    }
+    .dk .unit-type-tag { color: rgba(255,255,255,.4); }
+    .unit-sf {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--charcoal);
+      margin-bottom: 2px;
+    }
+    .dk .unit-sf { color: var(--white); }
+    .unit-sf-sub { font-size: 10px; color: var(--mid-gray); margin-bottom: 14px; }
+    .unit-count-big {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--crimson);
+      line-height: 1;
+    }
+    .dk .unit-count-big { color: rgba(255,255,255,.8); }
+    .unit-count-sub {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--mid-gray);
+      margin-bottom: 16px;
+    }
+    .unit-rooms {
+      list-style: none;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+    }
+    .dk .unit-rooms { border-color: rgba(255,255,255,.08); }
+    .unit-rooms li {
+      font-size: 11px;
+      color: var(--mid-gray);
+      padding: 2.5px 0;
+    }
+    .unit-rooms li::before {
+      content: '—';
+      margin-right: 6px;
+      color: var(--crimson);
+      opacity: .5;
+    }
+    .dk .unit-rooms li { color: rgba(255,255,255,.38); }
+
+    /* ── EFFICIENCY BAR ── */
+    .eff-wrap { margin: 8px 0 32px; }
+    .eff-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid-gray);
+      margin-bottom: 7px;
+    }
+    .eff-track {
+      background: var(--rule);
+      height: 5px;
+    }
+    .eff-fill {
+      height: 100%;
+      background: var(--crimson);
+      width: 0%;
+      transition: width 1.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── SUMMARY TABLE ── */
+    table.summary {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table.summary thead th {
+      padding: 10px 20px;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      text-align: left;
+    }
+    table.summary thead th.r { text-align: right; }
+    table.summary tbody tr { border-bottom: 1px solid rgba(255,255,255,.05); transition: background .15s; }
+    table.summary tbody tr:hover { background: rgba(255,255,255,.03); }
+    table.summary tbody td { padding: 14px 20px; color: rgba(255,255,255,.55); font-size: 14px; }
+    table.summary tbody td:first-child { font-weight: 600; color: var(--white); }
+    table.summary tbody td.r {
+      text-align: right;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 15px;
+      color: var(--white);
+    }
+    table.summary tbody tr.muted td { opacity: .45; }
+    table.summary tfoot td {
+      padding: 15px 20px;
+      background: var(--crimson);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--white);
+    }
+    table.summary tfoot td.r {
+      text-align: right;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 20px;
+    }
+
+    /* ── NOTES ── */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 48px;
+    }
+    .note-item {
+      display: flex;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(158,27,50,.12);
+    }
+    .note-n {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--crimson);
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .note-t { font-size: 13px; color: var(--dark-gray); line-height: 1.65; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--charcoal);
+      border-top: 2px solid var(--crimson);
+      padding: 28px 56px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-school {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,.45);
+    }
+    footer p { font-size: 11.5px; color: rgba(255,255,255,.25); }
+
+    /* ── ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.in { opacity: 1; transform: none; }
+    .d1 { transition-delay: .1s; }
+    .d2 { transition-delay: .2s; }
+    .d3 { transition-delay: .3s; }
+    .d4 { transition-delay: .4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      nav { padding: 0 24px; }
+      nav ul { display: none; }
+      .hero, .section, .floor-sec { padding: 64px 24px; }
+      .hero-stats { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .hero::after { font-size: 320px; right: -30px; }
+      .challenge-cols { grid-template-columns: 1fr; gap: 40px; }
+      .two-col, .two-col.wide { grid-template-columns: 1fr; }
+      .unit-grid { grid-template-columns: 1fr 1fr; }
+      .notes-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px; }
+      .ghost-label { font-size: 140px; right: 16px; top: 20px; }
+    }
+
+    /* ===== CTD 255 GLOBAL SITE NAVIGATION ===== */
+    .ctd-global-nav { background: #1A1714; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .ctd-global-nav-inner { max-width: 1320px; margin: 0 auto; padding: 11px 28px; display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+    .ctd-global-brand { font-family: 'Source Sans 3', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #fff; text-decoration: none; white-space: nowrap; }
+    .ctd-global-brand span { color: rgba(255,255,255,.38); font-weight: 500; margin-left: 8px; letter-spacing: .03em; text-transform: none; }
+    .ctd-global-links { display: flex; gap: 3px; flex-wrap: wrap; }
+    .ctd-global-links a { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: rgba(255,255,255,.5); text-decoration: none; padding: 7px 11px; border-radius: 3px; transition: all .15s ease; white-space: nowrap; }
+    .ctd-global-links a:hover { color: #fff; background: rgba(255,255,255,.08); }
+    .ctd-global-links a.is-active { color: #fff; background: #9E1B32; }
+    /* Local section nav is NOT sticky — both bars scroll away with the page */
+    nav { position: static !important; top: auto !important; }
+    @media (max-width: 560px) {
+      .ctd-global-brand span { display: none; }
+    }
+    @media (max-width: 960px) {
+      .ctd-global-nav-inner { padding: 10px 16px; }
+      .ctd-global-links { gap: 2px; }
+      .ctd-global-links a { padding: 6px 8px; font-size: 9px; }
+    }
+    html, body { overflow-x: hidden; max-width: 100%; }
+  </style>
+</head>
+<body>
+<div class="ctd-global-nav">
+  <div class="ctd-global-nav-inner">
+    <a href="index.html" class="ctd-global-brand">CTD 255<span>Computer Applications for Interior Design</span></a>
+    <div class="ctd-global-links">
+      <a href="index.html">Home</a>
+      <a href="case-study.html" class="is-active">Case Study</a>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand"><em>UA</em> · CTD 255 · Computer Application for Interior Design</div>
+  <ul>
+    <li><a href="#challenge">Challenge</a></li>
+    <li><a href="#floor1">Floor 1</a></li>
+    <li><a href="#residential">Floors 2–6</a></li>
+    <li><a href="#rooftop">Rooftop</a></li>
+    <li><a href="#summary">Summary</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <p class="hero-eyebrow">CTD 255 · Case Study · Computer Application for Interior Design</p>
+  <h1>Industrial-to-<em>Student Residence</em><br>Retrofit</h1>
+  <p class="hero-sub">A comprehensive adaptive reuse challenge: transform a six-story concrete industrial building into a full-service student residence, working within fixed structural constraints to deliver 45 units, ground-floor amenities, and activated rooftop programming.</p>
+  <div class="hero-stats">
+    <div class="stat reveal">
+      <div class="stat-num">38,808</div>
+      <div class="stat-lbl">Gross sq ft</div>
+    </div>
+    <div class="stat reveal d1">
+      <div class="stat-num">6</div>
+      <div class="stat-lbl">Floors</div>
+    </div>
+    <div class="stat reveal d2">
+      <div class="stat-num">45</div>
+      <div class="stat-lbl">Residential Units</div>
+    </div>
+    <div class="stat reveal d3">
+      <div class="stat-num">4</div>
+      <div class="stat-lbl">Unit Types</div>
+    </div>
+  </div>
+</header>
+
+<!-- CHALLENGE -->
+<section class="section alt" id="challenge">
+  <p class="eyebrow">Design Challenge</p>
+  <h2 class="sec-title">The Brief</h2>
+  <hr class="sec-rule">
+  <div class="challenge-cols">
+    <div class="challenge-body reveal">
+      <p>This project requires students to retrofit a six-story industrial building into a contemporary student residence. The structural system — a concrete frame with 18"×24" columns on a 22'×29' grid — was engineered for industrial load patterns, not residential living. Every design decision must negotiate between existing constraints and the demands of a livable, code-compliant multi-unit community.</p>
+      <p>The floor plate measures 49' × 132', yielding 6,468 square feet per level. Two emergency stair towers, encased in structural concrete walls and positioned at diagonally opposite corners of the building, are fixed elements that govern all circulation logic on every floor. These towers — and the elevator that must be integrated into the service core — are the three non-negotiable anchors of the plan.</p>
+      <p>Floor-to-floor heights vary by location: the 16-foot ground level creates generous volume for amenity programming, while the 11'–6" bays on floors 2 through 6 demand careful coordination of mechanical systems, ceiling depths, and minimum residential clearances. The flat concrete slab roof offers an opportunity for student outdoor programming, with occupancy limited to 50% of the total rooftop area by applicable code restriction.</p>
+    </div>
+    <div class="specs-panel reveal d1">
+      <p class="specs-group-label">Building Dimensions</p>
+      <div class="spec-row"><span class="spec-k">Floor plate</span><span class="spec-v">49' × 132' = 6,468 sf</span></div>
+      <div class="spec-row"><span class="spec-k">Number of floors</span><span class="spec-v">6 + Rooftop</span></div>
+      <div class="spec-row"><span class="spec-k">Gross building area</span><span class="spec-v">38,808 sf</span></div>
+      <p class="specs-group-label">Floor-to-Floor Heights</p>
+      <div class="spec-row"><span class="spec-k">Ground → Level 2</span><span class="spec-v">16'–0"</span></div>
+      <div class="spec-row"><span class="spec-k">Level 2 → Level 6</span><span class="spec-v">11'–6" (typ.)</span></div>
+      <p class="specs-group-label">Structural System</p>
+      <div class="spec-row"><span class="spec-k">Column size</span><span class="spec-v">18" × 24"</span></div>
+      <div class="spec-row"><span class="spec-k">Grid — short axis (X)</span><span class="spec-v">22'–0", centered</span></div>
+      <div class="spec-row"><span class="spec-k">Grid — long axis (Y)</span><span class="spec-v">29'–0", centered</span></div>
+      <div class="spec-row"><span class="spec-k">Roof type</span><span class="spec-v">Flat concrete slab</span></div>
+      <p class="specs-group-label">Stair Towers</p>
+      <div class="spec-row"><span class="spec-k">Location</span><span class="spec-v">Diagonal — NW + SE</span></div>
+      <div class="spec-row"><span class="spec-k">Construction</span><span class="spec-v">Structural concrete walls</span></div>
+      <div class="spec-row"><span class="spec-k">Offset from short edge</span><span class="spec-v">22'–0"</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILDING DIAGRAM -->
+<section class="section warm" id="diagram">
+  <p class="eyebrow">Building Organization</p>
+  <h2 class="sec-title">Floor-by-Floor Overview</h2>
+  <hr class="sec-rule">
+  <div class="diagram-wrap reveal">
+    <svg class="building-svg" viewBox="0 0 620 500" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- ROOFTOP -->
+      <rect x="80" y="18" width="420" height="48" fill="#F7EAED" stroke="#9E1B32" stroke-width="1.5"/>
+      <text x="100" y="35" font-family="'Source Sans 3',sans-serif" font-size="9" font-weight="700" letter-spacing="2.5" fill="#9E1B32">ROOFTOP</text>
+      <text x="100" y="52" font-family="'Source Sans 3',sans-serif" font-size="10.5" fill="#5A4A42">BBQ Area · Yoga Garden · Outdoor Dining</text>
+      <text x="480" y="52" font-family="'Source Sans 3',sans-serif" font-size="13" font-weight="700" fill="#9E1B32" text-anchor="end">6,468 sf</text>
+      <!-- 50% dashed line -->
+      <line x1="290" y1="18" x2="290" y2="66" stroke="#9E1B32" stroke-width="1" stroke-dasharray="4,3" opacity=".45"/>
+      <text x="294" y="30" font-family="'Source Sans 3',sans-serif" font-size="8.5" fill="#9E1B32" opacity=".6">50% occ.</text>
+
+      <!-- FLOOR 6 -->
+      <rect x="80" y="74" width="420" height="56" fill="#FFFFFF" stroke="#DDD8D2" stroke-width="1.5"/>
+      <text x="64" y="96" font-family="'Source Sans 3',sans-serif" font-size="22" font-weight="700" fill="#E8E4DF" text-anchor="end">6</text>
+      <text x="100" y="93" font-family="'Source Sans 3',sans-serif" font-size="9" font-weight="700" letter-spacing="2.5" fill="#9A9189">LEVEL 6</text>
+      <text x="100" y="112" font-family="'Source Sans 3',sans-serif" font-size="10.5" fill="#3A3530">Residential · 9 units avg · 11'–6" floor-to-floor</text>
+      <text x="480" y="112" font-family="'Source Sans 3',sans-serif" font-size="13" font-weight="700" fill="#1A1714" text-anchor="end">6,468 sf</text>
+
+      <!-- FLOOR 5 -->
+      <rect x="80" y="138" width="420" height="56" fill="#FAFAF8" stroke="#DDD8D2" stroke-width="1.5"/>
+      <text x="64" y="160" font-family="'Source Sans 3',sans-serif" font-size="22" font-weight="700" fill="#E8E4DF" text-anchor="end">5</text>
+      <text x="100" y="157" font-family="'Source Sans 3',sans-serif" font-size="9" font-weight="700" letter-spacing="2.5" fill="#9A9189">LEVEL 5</text>
+      <text x="100" y="176" font-family="'Source Sans 3',sans-serif" font-size="10.5" fill="#3A3530">Residential · 9 units avg · 11'–6" floor-to-floor</text>
+      <text x="480" y="176" font-family="'Source Sans 3',sans-serif" font-size="13" font-weight="700" fill="#1A1714" text-anchor="end">6,468 sf</text>
+
+      <!-- FLOOR 4 -->
+      <rect x="80" y="202" width="420" height="56" fill="#FFFFFF" stroke="#DDD8D2" stroke-width="1.5"/>
+      <text x="64" y="224" font-family="'Source Sans 3',sans-serif" font-size="22" font-weight="700" fill="#E8E4DF" text-anchor="end">4</text>
+      <text x="100" y="221" font-family="'Source Sans 3',sans-serif" font-size="9" font-weight="700" letter-spacing="2.5" fill="#9A9189">LEVEL 4</text>
+      <text x="100" y="240" font-family="'Source Sans 3',sans-serif" font-size="10.5" fill="#3A3530">Residential · 9 units avg · 11'–6" floor-to-floor</text>
+      <text x="480" y="240" font-family="'Source Sans 3',sans-serif" font-size="13" font-weight="700" fill="#1A1714" text-anchor="end">6,468 sf</text>
+
+      <!-- FLOOR 3 -->
+      <rect x="80" y="266" width="420" height="56" fill="#FAFAF8" stroke="#DDD8D2" stroke-width="1.5"/>
+      <text x="64" y="288" font-family="'Source Sans 3',sans-serif" font-size="22" font-weight="700" fill="#E8E4DF" text-anchor="end">3</text>
+      <text x="100" y="285" font-family="'Source Sans 3',sans-serif" font-size="9" font-weight="700" letter-spacing="2.5" fill="#9A9189">LEVEL 3</text>
+      <text x="100" y="304" font-family="'Source Sans 3',sans-serif" font-size="10.5" fill="#3A3530">Residential · 9 units avg · 11'–6" floor-to-floor</text>
+      <text x="480" y="304" font-family="'Source Sans 3',sans-serif" font-size="13" font-weight="700" fill="#1A1714" text-anchor="end">6,468 sf</text>
+
+      <!-- FLOOR 2 -->
+      <rect x="80" y="330" width="420" height="56" fill="#FFFFFF" stroke="#DDD8D2" stroke-width="1.5"/>
+      <text x="64" y="352" font-family="'Source Sans 3',sans-serif" font-size="22" font-weight="700" fill="#E8E4DF" text-anchor="end">2</text>
+      <text x="100" y="349" font-family="'Source Sans 3',sans-serif" font-size="9" font-weight="700" letter-spacing="2.5" fill="#9A9189">LEVEL 2</text>
+      <text x="100" y="368" font-family="'Source Sans 3',sans-serif" font-size="10.5" fill="#3A3530">Residential · 9 units avg · 11'–6" floor-to-floor</text>
+      <text x="480" y="368" font-family="'Source Sans 3',sans-serif" font-size="13" font-weight="700" fill="#1A1714" text-anchor="end">6,468 sf</text>
+
+      <!-- FLOOR 1 — crimson, taller -->
+      <rect x="80" y="394" width="420" height="78" fill="#9E1B32" stroke="#7A1424" stroke-width="1.5"/>
+      <text x="64" y="422" font-family="'Source Sans 3',sans-serif" font-size="22" font-weight="700" fill="rgba(255,255,255,.15)" text-anchor="end">1</text>
+      <text x="100" y="414" font-family="'Source Sans 3',sans-serif" font-size="9" font-weight="700" letter-spacing="2.5" fill="rgba(255,255,255,.5)">LEVEL 1  —  AMENITY</text>
+      <text x="100" y="434" font-family="'Source Sans 3',sans-serif" font-size="11" fill="rgba(255,255,255,.9)">Lobby · Coworking Space · Gym · Student Club</text>
+      <text x="100" y="453" font-family="'Source Sans 3',sans-serif" font-size="10.5" fill="rgba(255,255,255,.55)">16'–0" floor-to-floor</text>
+      <text x="480" y="445" font-family="'Source Sans 3',sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="end">6,468 sf</text>
+
+      <!-- GROUND LINE -->
+      <line x1="58" y1="472" x2="542" y2="472" stroke="#3A3530" stroke-width="2.5"/>
+
+      <!-- HEIGHT BRACKETS — right side -->
+      <line x1="520" y1="74" x2="520" y2="386" stroke="#C0B8B0" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="516" y1="74" x2="524" y2="74" stroke="#C0B8B0" stroke-width="1"/>
+      <line x1="516" y1="386" x2="524" y2="386" stroke="#C0B8B0" stroke-width="1"/>
+      <text x="548" y="226" font-family="'Source Sans 3',sans-serif" font-size="9" fill="#9A9189" text-anchor="middle" transform="rotate(90,548,226)">11'–6" typ. (Lvls 2–6)</text>
+
+      <line x1="520" y1="394" x2="520" y2="472" stroke="#C0B8B0" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="516" y1="394" x2="524" y2="394" stroke="#C0B8B0" stroke-width="1"/>
+      <line x1="516" y1="472" x2="524" y2="472" stroke="#C0B8B0" stroke-width="1"/>
+      <text x="548" y="434" font-family="'Source Sans 3',sans-serif" font-size="9" fill="#9A9189" text-anchor="middle" transform="rotate(90,548,434)">16'–0"</text>
+
+      <!-- TOTAL LABEL -->
+      <text x="300" y="495" font-family="'Source Sans 3',sans-serif" font-size="9.5" font-weight="700" fill="#9A9189" letter-spacing="1.5" text-anchor="middle">49' × 132' = 6,468 SF PER FLOOR · 6 FLOORS = 38,808 SF GROSS</text>
+    </svg>
+  </div>
+</section>
+
+<!-- FLOOR 1 -->
+<section class="floor-sec" id="floor1">
+  <div class="ghost-label">01</div>
+  <div class="floor-inner">
+    <div class="floor-head reveal">
+      <span class="floor-pill">Floor 1</span>
+      <span class="floor-title">Amenity Level</span>
+      <span class="floor-meta">6,468 sf total · 16'–0" floor-to-floor</span>
+    </div>
+    <div class="two-col">
+      <div class="reveal">
+        <p class="tbl-label">Program Spaces</p>
+        <table class="prog">
+          <thead>
+            <tr><th>Space</th><th class="r">sq ft</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Lobby / Reception</td><td class="num">800</td></tr>
+            <tr><td>Coworking Space</td><td class="num">1,100</td></tr>
+            <tr><td>Gym</td><td class="num">1,350</td></tr>
+            <tr><td>Student Club / Lounge</td><td class="num">900</td></tr>
+            <tr><td>ADA Restroom — Women</td><td class="num">90</td></tr>
+            <tr><td>ADA Restroom — Men</td><td class="num">90</td></tr>
+            <tr><td>Interior Circulation</td><td class="num">918</td></tr>
+            <tr class="sub"><td><strong>Program Subtotal</strong></td><td class="num"><strong>5,248</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="reveal d1">
+        <p class="tbl-label">Service / Infrastructure</p>
+        <table class="prog">
+          <thead>
+            <tr><th>Space</th><th class="r">sq ft</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Stair Tower NW (incl. walls)</td><td class="num">220</td></tr>
+            <tr><td>Stair Tower SE (incl. walls)</td><td class="num">220</td></tr>
+            <tr><td>Elevator Shaft</td><td class="num">80</td></tr>
+            <tr><td>Elevator Lobby</td><td class="num">120</td></tr>
+            <tr><td>Mechanical / Electrical Room</td><td class="num">350</td></tr>
+            <tr><td>Bike Storage / Building Storage</td><td class="num">150</td></tr>
+            <tr><td>Janitor / Utility</td><td class="num">80</td></tr>
+            <tr class="sub"><td><strong>Service Subtotal</strong></td><td class="num"><strong>1,220</strong></td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>Floor 1 Total</td><td class="num">6,468</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESIDENTIAL -->
+<section class="floor-sec alt" id="residential">
+  <div class="ghost-label" style="color:#F0ECE8;">2–6</div>
+  <div class="floor-inner">
+    <div class="floor-head reveal">
+      <span class="floor-pill">Floors 2 – 6</span>
+      <span class="floor-title">Residential Levels</span>
+      <span class="floor-meta">6,468 sf per floor · 11'–6" floor-to-floor</span>
+    </div>
+
+    <p class="eyebrow reveal" style="margin-bottom:20px;">Unit Mix — 45 Total Units</p>
+    <div class="unit-grid">
+      <div class="unit-card reveal">
+        <div class="unit-type-tag">Type A</div>
+        <div class="unit-sf">484</div>
+        <div class="unit-sf-sub">sq ft net</div>
+        <div class="unit-count-big">25</div>
+        <div class="unit-count-sub">units · 12,100 sf total</div>
+        <ul class="unit-rooms">
+          <li>1 Bedroom</li>
+          <li>1 Full Bathroom</li>
+          <li>Open Kitchen</li>
+          <li>Common Area</li>
+          <li>Laundry Closet</li>
+          <li>Den / Study</li>
+        </ul>
+      </div>
+      <div class="unit-card reveal d1">
+        <div class="unit-type-tag">Type B</div>
+        <div class="unit-sf">759</div>
+        <div class="unit-sf-sub">sq ft net</div>
+        <div class="unit-count-big">5</div>
+        <div class="unit-count-sub">units · 3,795 sf total</div>
+        <ul class="unit-rooms">
+          <li>Master Bedroom + Bath</li>
+          <li>Secondary Bedroom</li>
+          <li>Common Full Bathroom</li>
+          <li>Open Kitchen</li>
+          <li>Common Area</li>
+          <li>Laundry Closet</li>
+          <li>Den / Study</li>
+        </ul>
+      </div>
+      <div class="unit-card reveal d2">
+        <div class="unit-type-tag">Type C</div>
+        <div class="unit-sf">1,078</div>
+        <div class="unit-sf-sub">sq ft net</div>
+        <div class="unit-count-big">5</div>
+        <div class="unit-count-sub">units · 5,390 sf total</div>
+        <ul class="unit-rooms">
+          <li>Master Bedroom + Bath</li>
+          <li>2 Additional Bedrooms</li>
+          <li>Common Full Bathroom</li>
+          <li>Open Kitchen</li>
+          <li>Common Area</li>
+          <li>Laundry Closet</li>
+          <li>Den / Study</li>
+        </ul>
+      </div>
+      <div class="unit-card dk reveal d3">
+        <div class="unit-type-tag">Type D</div>
+        <div class="unit-sf">526</div>
+        <div class="unit-sf-sub">sq ft net</div>
+        <div class="unit-count-big">10</div>
+        <div class="unit-count-sub">units · 5,260 sf total</div>
+        <ul class="unit-rooms">
+          <li>Master Bedroom + Bath</li>
+          <li>Common Full Bathroom</li>
+          <li>Open Kitchen</li>
+          <li>Common Area</li>
+          <li>Laundry Closet</li>
+          <li>Den / Study</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col wide" style="margin-top:12px;">
+      <div class="reveal">
+        <p class="tbl-label">Unit Mix Summary</p>
+        <table class="prog">
+          <thead>
+            <tr><th>Type</th><th>Units</th><th class="r">Unit sf</th><th class="r">Total sf</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A — 1 BR / 1 BA</td><td>25</td><td class="smnum" style="text-align:right">484</td><td class="num">12,100</td></tr>
+            <tr><td>B — 2 BR / 2 BA</td><td>5</td><td class="smnum" style="text-align:right">759</td><td class="num">3,795</td></tr>
+            <tr><td>C — 3 BR / 2 BA</td><td>5</td><td class="smnum" style="text-align:right">1,078</td><td class="num">5,390</td></tr>
+            <tr><td>D — 1 BR / 2 BA</td><td>10</td><td class="smnum" style="text-align:right">526</td><td class="num">5,260</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="2">45 Units Total</td><td></td><td class="num">26,545</td></tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="reveal d1">
+        <p class="tbl-label">Service / Circulation — per floor</p>
+        <table class="prog">
+          <thead>
+            <tr><th>Space</th><th class="r">sq ft</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Stair Tower NW (incl. walls)</td><td class="num">220</td></tr>
+            <tr><td>Stair Tower SE (incl. walls)</td><td class="num">220</td></tr>
+            <tr><td>Elevator Shaft</td><td class="num">50</td></tr>
+            <tr><td>Elevator Lobby / Landing</td><td class="num">100</td></tr>
+            <tr><td>Common Corridor</td><td class="num">500</td></tr>
+            <tr><td>Mechanical / Electrical Closet</td><td class="num">60</td></tr>
+            <tr><td>Janitor Closet</td><td class="num">30</td></tr>
+            <tr class="sub"><td><strong>Service Total (per floor)</strong></td><td class="num"><strong>1,180</strong></td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>Net unit area per floor</td><td class="num">5,288</td></tr>
+          </tfoot>
+        </table>
+        <div class="eff-wrap">
+          <div class="eff-head"><span>Net-to-Gross Efficiency</span><span>82.1%</span></div>
+          <div class="eff-track"><div class="eff-fill" data-w="82.1"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROOFTOP -->
+<section class="floor-sec" id="rooftop">
+  <div class="ghost-label">RT</div>
+  <div class="floor-inner">
+    <div class="floor-head reveal">
+      <span class="floor-pill">Rooftop</span>
+      <span class="floor-title">Outdoor Amenity Level</span>
+      <span class="floor-meta">6,468 sf total · 50% occupiable = 3,234 sf</span>
+    </div>
+    <div class="two-col">
+      <div class="reveal">
+        <p class="tbl-label">Occupiable Zone — 50%</p>
+        <table class="prog">
+          <thead>
+            <tr><th>Space</th><th class="r">sq ft</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>BBQ Area</td><td class="num">600</td></tr>
+            <tr><td>Yoga Garden</td><td class="num">1,200</td></tr>
+            <tr><td>Outdoor Dining</td><td class="num">900</td></tr>
+            <tr><td>Hardscape / Circulation</td><td class="num">534</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>Occupiable Subtotal</td><td class="num">3,234</td></tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="reveal d1">
+        <p class="tbl-label">Non-Occupiable Zone — 50%</p>
+        <table class="prog">
+          <thead>
+            <tr><th>Space</th><th class="r">sq ft</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Mechanical / HVAC Equipment</td><td class="num">800</td></tr>
+            <tr><td>Planter Beds / Green Roof Buffer</td><td class="num">1,200</td></tr>
+            <tr><td>Code Setback / Perimeter Buffer</td><td class="num">1,234</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>Non-Occupiable Subtotal</td><td class="num">3,234</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<section class="section dark" id="summary">
+  <p class="eyebrow">Area Program</p>
+  <h2 class="sec-title">Gross Area Summary</h2>
+  <hr class="sec-rule">
+  <table class="summary reveal">
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>Use</th>
+        <th>Net Program sf</th>
+        <th>Service / Circ. sf</th>
+        <th class="r">Gross sf</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Floor 1</td>
+        <td>Amenity Level</td>
+        <td>5,248</td>
+        <td>1,220</td>
+        <td class="r">6,468</td>
+      </tr>
+      <tr>
+        <td>Floor 2</td>
+        <td>Residential</td>
+        <td>~5,288</td>
+        <td>1,180</td>
+        <td class="r">6,468</td>
+      </tr>
+      <tr>
+        <td>Floor 3</td>
+        <td>Residential</td>
+        <td>~5,288</td>
+        <td>1,180</td>
+        <td class="r">6,468</td>
+      </tr>
+      <tr>
+        <td>Floor 4</td>
+        <td>Residential</td>
+        <td>~5,288</td>
+        <td>1,180</td>
+        <td class="r">6,468</td>
+      </tr>
+      <tr>
+        <td>Floor 5</td>
+        <td>Residential</td>
+        <td>~5,288</td>
+        <td>1,180</td>
+        <td class="r">6,468</td>
+      </tr>
+      <tr>
+        <td>Floor 6</td>
+        <td>Residential</td>
+        <td>~5,288</td>
+        <td>1,180</td>
+        <td class="r">6,468</td>
+      </tr>
+      <tr class="muted">
+        <td>Rooftop</td>
+        <td>Outdoor Amenity</td>
+        <td>3,234 (occ.)</td>
+        <td>3,234 (n/a)</td>
+        <td class="r">6,468 †</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4">Total Gross Building Area — Floors 1 through 6</td>
+        <td class="r">38,808</td>
+      </tr>
+    </tfoot>
+  </table>
+  <p style="font-size:11px;color:rgba(255,255,255,.25);margin-top:14px;">† Rooftop not counted in gross building area.</p>
+</section>
+
+<!-- NOTES -->
+<section class="section" style="background:var(--crimson-pale);">
+  <p class="eyebrow">Program Notes</p>
+  <h2 class="sec-title" style="font-size:26px;margin-bottom:28px;">Design Parameters &amp; Constraints</h2>
+  <div class="notes-grid">
+    <div class="note-item reveal">
+      <span class="note-n">01</span>
+      <span class="note-t">All unit areas are net interior, measured to the interior face of demising walls. Wall thickness is not included within individual unit figures and will be absorbed within the gross floor area during schematic layout.</span>
+    </div>
+    <div class="note-item reveal d1">
+      <span class="note-n">02</span>
+      <span class="note-t">The 45-unit program totals 26,545 sf against 26,440 sf of available net area per floor — a 105 sf total overage resolved through precise corridor geometry and demising wall coordination at schematic design.</span>
+    </div>
+    <div class="note-item reveal">
+      <span class="note-n">03</span>
+      <span class="note-t">Unit distribution across Floors 2–6 is a student design variable. No single floor may assign more than 5,288 sf of unit area. Students should confirm that each floor's unit selection satisfies this constraint before proceeding to Revit modeling.</span>
+    </div>
+    <div class="note-item reveal d1">
+      <span class="note-n">04</span>
+      <span class="note-t">An accessible elevator is a required life-safety and ADA compliance element. It is accounted for separately on Floor 1 (80 sf, including pit or overhead machine space) and on each residential floor (50 sf per level).</span>
+    </div>
+    <div class="note-item reveal">
+      <span class="note-n">05</span>
+      <span class="note-t">The 50% rooftop occupancy limit reflects applicable code and zoning restrictions for rooftop amenity areas. Per IBC §1015 (Guards), a minimum 5'-0" setback from all parapet and roof-edge conditions to any occupiable programming is required, generating the 1,234 sf non-occupiable perimeter buffer shown in the rooftop program. A 42" (3'-6") code-compliant guard must be provided at all open-sided edges of the occupiable zone. All mechanical equipment must remain within the non-occupiable zone and may not project into the designated occupiable area.</span>
+    </div>
+    <div class="note-item reveal d1">
+      <span class="note-n">06</span>
+      <span class="note-t">Type D (526 sf, 1 BR / 2 BA) carries a master bathroom and a common full bathroom in a single-bedroom plan. This configuration is best suited to accessible or adaptable occupancy. Confirm design intent before developing unit layouts.</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-school">The University of Alabama · College of Human Environmental Sciences – Interior Design</div>
+  <p>CTD 255 · Computer Application for Interior Design · Case Study</p>
+</footer>
+
+<script>
+  // Scroll-triggered reveals
+  const els = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  els.forEach(el => obs.observe(el));
+
+  // Trigger hero stats immediately
+  document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('in'));
+
+  // Efficiency bar
+  const fills = document.querySelectorAll('.eff-fill');
+  const barObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const w = e.target.dataset.w;
+        setTimeout(() => { e.target.style.width = w + '%'; }, 250);
+        barObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  fills.forEach(el => barObs.observe(el));
+</script>
+
+</body>
+</html>
